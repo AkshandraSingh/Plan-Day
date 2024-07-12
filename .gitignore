@@ -1,0 +1,4 @@
+\node_modules
+\planenv
+\package-lock.json
+\.env
