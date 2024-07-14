@@ -2,3 +2,4 @@
 \planenv
 \package-lock.json
 \.env
+\.vscode
