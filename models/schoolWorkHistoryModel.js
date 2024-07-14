@@ -11,7 +11,7 @@ const schoolWorkHistoryModel = new mongoose.Schema({
     },
     workDescription: {
         type: String,
-        required: true
+        default: "",
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,

@@ -7,11 +7,7 @@ const dailyTaskModel = new mongoose.Schema({
     },
     taskDescription: {
         type: String,
-        required: true
-    },
-    taskDueDate: {
-        type: Date,
-        required: true
+        default: "",
     },
     isCompleted: {
         type: Boolean,

@@ -7,6 +7,7 @@ const pendingWorkModel = new mongoose.Schema({
     },
     workDescription: {
         type: String,
+        default: "",
     },
     workDueDate: {
         type: Date,
