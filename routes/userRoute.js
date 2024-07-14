@@ -8,5 +8,6 @@ userRoute.post('/registerUser', userController.registerUser)
 userRoute.post('/loginUser', userController.loginUser)
 userRoute.post('/forgetPassword', userController.forgetPassword)
 userRoute.post('/resetPassword/:userId/:accessToken', userController.resetPassword)
+userRoute.post('/setNewPassword/:userId', userController.setNewPassword)
 
 module.exports = userRoute

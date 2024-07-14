@@ -86,7 +86,7 @@ module.exports = {
                 })
             }
             const resetToken = jwt.sign({ isUserExist }, process.env.SECRET_KEY, { expiresIn: '10m' }); //* Generate the reset token.
-            await emailService.sendMail(userEmail, "forgetPassword")
+            await emailService.sendMail(userEmail, "forgetPassword") //* Sending Email to user using nodemailer.
             return res.status(200).send({
                 success: true,
                 message: 'Email Has Been Sended Successfully!',
@@ -107,11 +107,11 @@ module.exports = {
         try {
             const { accessToken, userId } = req.params
             const { newPassword, confirmPassword } = req.body
-            const isTokenCorrect = jwt.verify(accessToken, process.env.SECRET_KEY);
+            const isTokenCorrect = jwt.verify(accessToken, process.env.SECRET_KEY); //* Verify the token.
             if (isTokenCorrect) {
-                if (newPassword === confirmPassword) {
+                if (newPassword === confirmPassword) { //* Check is New Password and Confirm Password Match.
                     const userData = await userModel.findById(userId)
-                    for (const oldPassword of userData.usedPasswords) {
+                    for (const oldPassword of userData.usedPasswords) { //* Check is user already use the password before.
                         if (await bcrypt.compare(newPassword, oldPassword)) {
                             isPasswordExist = true;
                             break;
@@ -123,9 +123,9 @@ module.exports = {
                             message: "Don't use old passwords, try another password",
                         });
                     }
-                    const bcryptPassword = await bcrypt.hash(newPassword, 10)
+                    const bcryptPassword = await bcrypt.hash(newPassword, 10) //* Hash the new password.
                     userData.userPassword = bcryptPassword
-                    userData.usedPasswords.push(bcryptPassword)
+                    userData.usedPasswords.push(bcryptPassword) //* Push new password in array.
                     await userData.save();
                     res.status(201).json({
                         success: true,
@@ -151,4 +151,53 @@ module.exports = {
             })
         }
     },
+
+    //? Set New Password API
+    setNewPassword: async (req, res) => {
+        let isPasswordExist = false
+        try {
+            const { oldPassword, newPassword, confirmPassword } = req.body
+            const { userId } = req.params
+            const userData = await userModel.findById(userId)
+            if (newPassword != confirmPassword) { //* Check is New Password and Confirm Password Match.
+                return res.status(401).json({
+                    success: false,
+                    message: "New password and confirm password do not match"
+                });
+            }
+            const isPasswordCorrect = await bcrypt.compare(oldPassword, userData.userPassword) //* Check is Password is correct or not.
+            if (!isPasswordCorrect) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Old Password is incorrect!"
+                });
+            }
+            for (const oldPassword of userData.usedPasswords) { //* Check is user already use the password before.
+                if (await bcrypt.compare(newPassword, oldPassword)) {
+                    isPasswordExist = true;
+                    break;
+                }
+            }
+            if (isPasswordExist) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Don't use old passwords, try another password",
+                });
+            }
+            const bcryptPassword = await bcrypt.hash(newPassword, 10) //* Bcrypt the new password.
+            userData.userPassword = bcryptPassword
+            userData.usedPasswords.push(bcryptPassword) //* Push new password in array.
+            await userData.save()
+            res.status(201).json({
+                success: true,
+                message: "Password Updated",
+            });
+        } catch (error) {
+            res.status(500).send({
+                success: false,
+                message: 'Server Error',
+                error: error.message,
+            })
+        }
+    }
 }
