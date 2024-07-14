@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const moment = require('moment');
 
 const dailyTaskModel = new mongoose.Schema({
     taskTitle: {
@@ -12,6 +13,11 @@ const dailyTaskModel = new mongoose.Schema({
     isCompleted: {
         type: Boolean,
         default: false
+    },
+    taskReminder: {
+        type: Date,
+        required: true,
+        set: (v) => moment(v, 'YYYY-MM-DD hh:mm A').toDate() //* Format of date: YYYY-MM-DD hh:mm A.
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
