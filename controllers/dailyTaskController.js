@@ -26,6 +26,13 @@ module.exports = {
     updateTask: async (req, res) => {
         try {
             const { taskId } = req.params
+            if (req.body.isCompleted === true) {
+                await dailyTaskModel.findByIdAndDelete(taskId)
+                return res.status(200).send({
+                    success: true,
+                    message: "Task has been removed!",
+                })
+            }
             const taskData = await dailyTaskModel.findByIdAndUpdate(taskId, { //* Find task data by id and update.
                 taskTitle: req.body.taskTitle || undefined,
                 taskDescription: req.body.taskDescription || undefined,
