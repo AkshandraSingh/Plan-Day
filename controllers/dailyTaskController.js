@@ -73,8 +73,8 @@ module.exports = {
         }
     },
 
-    //? View Daily Tasks API
-    viewTasks: async (req, res) => {
+    //? View All Daily Tasks API
+    viewAllTasks: async (req, res) => {
         try {
             const { userId } = req.params
             const tasksData = await dailyTaskModel.find({ userId: userId }).select('taskTitle') //* Find all tasks related to userId and filter the response.
@@ -88,6 +88,31 @@ module.exports = {
                 success: true,
                 message: 'Tasks fetched successfully',
                 tasksData: tasksData,
+            })
+        } catch (error) {
+            res.status(500).send({
+                success: false,
+                message: 'Server Error',
+                error: error.message,
+            })
+        }
+    },
+
+    //? View Daily Task API
+    viewTask: async (req, res) => {
+        try {
+            const { taskId } = req.params
+            const taskData = await dailyTaskModel.findById(taskId) //* Find task data by id.
+            if (!taskData) {
+                return res.status(404).send({
+                    success: false,
+                    message: 'Task not found',
+                })
+            }
+            res.status(200).send({
+                success: true,
+                message: 'Task fetched successfully',
+                taskData: taskData,
             })
         } catch (error) {
             res.status(500).send({
