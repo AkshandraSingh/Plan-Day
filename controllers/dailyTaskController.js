@@ -47,4 +47,22 @@ module.exports = {
             })
         }
     },
+
+    //? Delete Daily Task API
+    deleteTask: async (req, res) => {
+        try {
+            const { taskId } = req.params
+            await dailyTaskModel.findByIdAndDelete(taskId) //* Find task data by id and delete.
+            res.status(200).send({
+                success: true,
+                message: 'Task deleted successfully',
+            })
+        } catch (error) {
+            res.status(500).send({
+                success: false,
+                message: 'Server Error',
+                error: error.message,
+            })
+        }
+    },
 }
