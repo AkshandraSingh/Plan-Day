@@ -72,4 +72,29 @@ module.exports = {
             })
         }
     },
+
+    //? View Daily Tasks API
+    viewTasks: async (req, res) => {
+        try {
+            const { userId } = req.params
+            const tasksData = await dailyTaskModel.find({ userId: userId }).select('taskTitle') //* Find all tasks related to userId and filter the response.
+            if (tasksData.length <= 0) {
+                return res.status(404).send({
+                    success: false,
+                    message: 'No tasks found for this user',
+                })
+            }
+            res.status(200).send({
+                success: true,
+                message: 'Tasks fetched successfully',
+                tasksData: tasksData,
+            })
+        } catch (error) {
+            res.status(500).send({
+                success: false,
+                message: 'Server Error',
+                error: error.message,
+            })
+        }
+    },
 }
