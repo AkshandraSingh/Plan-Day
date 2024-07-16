@@ -8,13 +8,12 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const sendMail = async (userEmail, emailService) => {
-    if (emailService === "forgetPassword") {
-        await transporter.sendMail({
-            from: `"PlanDay - Planner" <${process.env.USER_EMAIL}>`,
-            to: userEmail,
-            subject: "Forget Password - PlanDay",
-            html: `
+const forgetPassword = async (userEmail) => {
+    await transporter.sendMail({
+        from: `"PlanDay - Planner" <${process.env.USER_EMAIL}>`,
+        to: userEmail,
+        subject: "Forget Password - PlanDay",
+        html: `
                 <!DOCTYPE html>
                 <html lang="en">
 
@@ -60,10 +59,10 @@ const sendMail = async (userEmail, emailService) => {
                     <p><a href="https://techgenius-zgsb.onrender.com/" id="link">Set Password</a></p>
                 </body>
 
-                </html>`});
-    }
+                </html>`,
+    })
 }
 
 module.exports = {
-    sendMail,
+    forgetPassword,
 }

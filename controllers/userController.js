@@ -97,7 +97,7 @@ module.exports = {
                 })
             }
             const resetToken = jwt.sign({ isUserExist }, process.env.SECRET_KEY, { expiresIn: '10m' }); //* Generate the reset token.
-            await emailService.sendMail(userEmail, "forgetPassword") //* Sending Email to user using nodemailer.
+            await emailService.forgetPassword(userEmail) //* Sending Email to user using nodemailer.
             usersLogger.info("Email Has Been Sended Successfully (API: Forget Password)")
             return res.status(200).send({
                 success: true,
