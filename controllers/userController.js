@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 const userModel = require('../models/userModel')
 const emailService = require('../services/emailService')
+const usersLogger = require('../utils/usersLogger/usersLogger')
 
 module.exports = {
 
@@ -14,6 +15,7 @@ module.exports = {
                 userEmail: userData.userEmail,
             })
             if (isUserExist) {
+                usersLogger.error("User already exist (API: Register User)")
                 return res.status(400).send({
                     success: false,
                     message: 'User already exist',
@@ -23,12 +25,15 @@ module.exports = {
             userData.userPassword = bcryptPassword
             userData.usedPasswords.push(bcryptPassword) //* Push user password to usedPasswords array.
             await userData.save()
+            usersLogger.info("User registered successfully (API: Register User)")
             return res.status(202).send({
                 success: true,
                 message: "User Resisted Successfully",
                 userData: userData,
             })
         } catch (error) {
+            usersLogger.error(`API: Register User`)
+            usersLogger.error(`Server Error: ${error.message}`)
             res.status(500).send({
                 success: false,
                 message: 'Server Error',
@@ -45,6 +50,7 @@ module.exports = {
                 userEmail: userData.userEmail,
             })
             if (!isUserExist) {
+                usersLogger.error("User not found (API: Login User)")
                 return res.status(404).send({
                     success: false,
                     message: 'User not found',
@@ -52,18 +58,22 @@ module.exports = {
             }
             const isPasswordValid = await bcrypt.compare(userData.userPassword, isUserExist.userPassword) //* Check is user password is correct.
             if (!isPasswordValid) {
+                usersLogger.error("Invalid Password (API: Login User)")
                 return res.status(401).send({
                     success: false,
                     message: 'Invalid Password',
                 })
             }
             const token = jwt.sign({ isUserExist }, process.env.SECRET_KEY, { expiresIn: '1h' }); //* Generate the token.
+            usersLogger.info("User Logged In Successfully")
             return res.status(200).send({
                 success: true,
                 message: 'User Logged In Successfully',
                 token: token,
             })
         } catch (error) {
+            usersLogger.error("API: Login User")
+            usersLogger.error(`Server Error: ${error.message}`)
             res.status(500).send({
                 success: false,
                 message: 'Server Error',
@@ -80,6 +90,7 @@ module.exports = {
                 userEmail: userEmail,
             })
             if (!isUserExist) {
+                usersLogger.error("User not found (API: Forget Password)")
                 return res.status(404).send({
                     success: false,
                     message: 'User not found',
@@ -87,12 +98,15 @@ module.exports = {
             }
             const resetToken = jwt.sign({ isUserExist }, process.env.SECRET_KEY, { expiresIn: '10m' }); //* Generate the reset token.
             await emailService.sendMail(userEmail, "forgetPassword") //* Sending Email to user using nodemailer.
+            usersLogger.info("Email Has Been Sended Successfully (API: Forget Password)")
             return res.status(200).send({
                 success: true,
                 message: 'Email Has Been Sended Successfully!',
                 accessToken: resetToken,
             })
         } catch (error) {
+            usersLogger.error("API: Forget Password")
+            usersLogger.error(`Server Error: ${error.message}`)
             res.status(500).send({
                 success: false,
                 message: 'Server Error',
@@ -118,6 +132,8 @@ module.exports = {
                         }
                     }
                     if (isPasswordExist) {
+                        usersLogger.error('API: Reset Password')
+                        usersLogger.error("Don't use old passwords, try another password")
                         return res.status(401).json({
                             success: false,
                             message: "Don't use old passwords, try another password",
@@ -127,23 +143,30 @@ module.exports = {
                     userData.userPassword = bcryptPassword
                     userData.usedPasswords.push(bcryptPassword) //* Push new password in array.
                     await userData.save();
+                    usersLogger.info("Password Reset Successfully")
                     res.status(201).json({
                         success: true,
                         message: "Password Updated",
                     });
                 } else {
+                    usersLogger.error('API: Reset Password')
+                    usersLogger.error("New password and confirm password do not match")
                     res.status(401).send({
                         success: false,
                         message: "New password or confirm password is incorrect"
                     })
                 }
             } else {
+                userLogger.error('API: Reset Password')
+                usersLogger.error("Token is incorrect or expire")
                 res.status(401).send({
                     success: false,
                     message: "Token is incorrect or expire"
                 })
             }
         } catch (error) {
+            usersLogger.error('API: Reset Password')
+            usersLogger.error(`Server Error: ${error.message}`)
             res.status(500).send({
                 success: false,
                 message: 'Server Error',
@@ -160,6 +183,8 @@ module.exports = {
             const { userId } = req.params
             const userData = await userModel.findById(userId)
             if (newPassword != confirmPassword) { //* Check is New Password and Confirm Password Match.
+                userLogger.error('API: Set New Password')
+                usersLogger.error("New password and confirm password do not match")
                 return res.status(401).json({
                     success: false,
                     message: "New password and confirm password do not match"
@@ -167,6 +192,8 @@ module.exports = {
             }
             const isPasswordCorrect = await bcrypt.compare(oldPassword, userData.userPassword) //* Check is Password is correct or not.
             if (!isPasswordCorrect) {
+                userLogger.error('API: Set New Password')
+                usersLogger.error("Old Password is incorrect!")
                 return res.status(401).json({
                     success: false,
                     message: "Old Password is incorrect!"
@@ -179,6 +206,8 @@ module.exports = {
                 }
             }
             if (isPasswordExist) {
+                userLogger.error('API: Set New Password')
+                usersLogger.error("Don't use old passwords, try another password")
                 return res.status(401).json({
                     success: false,
                     message: "Don't use old passwords, try another password",
@@ -188,11 +217,14 @@ module.exports = {
             userData.userPassword = bcryptPassword
             userData.usedPasswords.push(bcryptPassword) //* Push new password in array.
             await userData.save()
+            userLogger.info("Password Reset Successfully")
             res.status(201).json({
                 success: true,
                 message: "Password Updated",
             });
         } catch (error) {
+            userLogger.error('API: Set New Password')
+            userLogger.error(`Server Error: ${error.message}`)
             res.status(500).send({
                 success: false,
                 message: 'Server Error',
