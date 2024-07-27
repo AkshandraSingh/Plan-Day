@@ -3,3 +3,4 @@ level info: Jul-16-2024 17:07:24 	Tasks fetched successfully (API: View All Task
 level error: Jul-16-2024 17:07:36 	Task not found (API: View Task)
 level info: Jul-16-2024 17:07:57 	Tasks fetched successfully (API: View All Tasks)
 level info: Jul-16-2024 17:08:04 	Task fetched successfully (API: View Task)
+level info: Jul-28-2024 00:51:22 	Task added successfully (API: Create Task)

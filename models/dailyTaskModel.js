@@ -19,6 +19,10 @@ const dailyTaskModel = new mongoose.Schema({
         required: true,
         set: (v) => moment(v, 'YYYY-MM-DD hh:mm A').toDate() //* Format of date: YYYY-MM-DD hh:mm A.
     },
+    isTaskRemind: {
+        type: Boolean,
+        default: false
+    },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
