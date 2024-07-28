@@ -180,8 +180,8 @@ module.exports = {
         }
     },
 
-    //? View Tasks by Custom Dates API
-    customDateTask: async (req, res) => {
+    //? Search Tasks by Custom Dates API
+    searchTaskByData: async (req, res) => {
         try {
             const { userId } = req.params;
             const { startDate, endDate } = req.body;
@@ -222,4 +222,36 @@ module.exports = {
             });
         }
     },
+
+    //? Search Tasks by letter
+    searchTaskByLetter: async (req, res) => {
+        try {
+            const { userId, letter } = req.params;
+            const tasksData = await dailyTaskModel.find({
+                userId: userId,
+                taskTitle: { $regex: new RegExp(`^${letter}`, 'i') },
+            }).select('taskTitle taskDescription'); //* Find all tasks related to userId and task title starts with given letter and filter the response.
+            if (tasksData.length === 0) {
+                dailyTaskLogger.error("No tasks found for the given letter (API: Search Tasks by Letter)");
+                return res.status(404).send({
+                    success: false,
+                    message: 'No tasks found for the given letter',
+                });
+            }
+            dailyTaskLogger.info("Tasks fetched successfully for the given letter (API: Search Tasks by Letter)");
+            res.status(200).send({
+                success: true,
+                message: "Tasks fetched successfully for the given letter",
+                tasksData: tasksData,
+            });
+        } catch (error) {
+            dailyTaskLogger.error("API: Search Tasks by Letter");
+            dailyTaskLogger.error(`Error: ${error.message}`);
+            res.status(500).send({
+                success: false,
+                message: 'Server Error',
+                error: error.message,
+            });
+        }
+    }
 }
