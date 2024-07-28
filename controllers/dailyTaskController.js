@@ -179,4 +179,47 @@ module.exports = {
             });
         }
     },
+
+    //? View Tasks by Custom Dates API
+    customDateTask: async (req, res) => {
+        try {
+            const { userId } = req.params;
+            const { startDate, endDate } = req.body;
+
+            //? Parse the dates and set the correct time boundaries
+            const startOfDay = new Date(`${startDate}T00:00:00Z`);
+            const endOfDay = new Date(`${endDate}T23:59:59Z`);
+
+            const customTasksData = await dailyTaskModel.find({
+                userId: userId,
+                createdAt: {
+                    $gte: startOfDay,
+                    $lte: endOfDay,
+                }
+            }).select('taskTitle taskDescription'); //? Find all tasks related to userId and given dates and filter the response
+
+            if (customTasksData.length === 0) {
+                dailyTaskLogger.error("No tasks found for the given dates (API: View Tasks by Custom Dates)");
+                return res.status(404).send({
+                    success: false,
+                    message: 'No tasks found for the given dates',
+                });
+            }
+
+            dailyTaskLogger.info("Tasks fetched successfully for the given dates (API: View Tasks by Custom Dates)");
+            res.status(200).send({
+                success: true,
+                message: "Tasks fetched successfully for the given dates",
+                customTasksData: customTasksData,
+            });
+        } catch (error) {
+            dailyTaskLogger.error("API: View Tasks by Custom Dates");
+            dailyTaskLogger.error(`Error: ${error.message}`);
+            res.status(500).send({
+                success: false,
+                message: 'Server Error',
+                error: error.message,
+            });
+        }
+    },
 }
