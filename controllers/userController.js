@@ -157,7 +157,7 @@ module.exports = {
                     })
                 }
             } else {
-                userLogger.error('API: Reset Password')
+                usersLogger.error('API: Reset Password')
                 usersLogger.error("Token is incorrect or expire")
                 res.status(401).send({
                     success: false,
@@ -183,7 +183,7 @@ module.exports = {
             const { userId } = req.params
             const userData = await userModel.findById(userId)
             if (newPassword != confirmPassword) { //* Check is New Password and Confirm Password Match.
-                userLogger.error('API: Set New Password')
+                usersLogger.error('API: Set New Password')
                 usersLogger.error("New password and confirm password do not match")
                 return res.status(401).json({
                     success: false,
@@ -192,7 +192,7 @@ module.exports = {
             }
             const isPasswordCorrect = await bcrypt.compare(oldPassword, userData.userPassword) //* Check is Password is correct or not.
             if (!isPasswordCorrect) {
-                userLogger.error('API: Set New Password')
+                usersLogger.error('API: Set New Password')
                 usersLogger.error("Old Password is incorrect!")
                 return res.status(401).json({
                     success: false,
@@ -206,7 +206,7 @@ module.exports = {
                 }
             }
             if (isPasswordExist) {
-                userLogger.error('API: Set New Password')
+                usersLogger.error('API: Set New Password')
                 usersLogger.error("Don't use old passwords, try another password")
                 return res.status(401).json({
                     success: false,
@@ -217,14 +217,14 @@ module.exports = {
             userData.userPassword = bcryptPassword
             userData.usedPasswords.push(bcryptPassword) //* Push new password in array.
             await userData.save()
-            userLogger.info("Password Reset Successfully")
+            usersLogger.info("Password Reset Successfully")
             res.status(201).json({
                 success: true,
                 message: "Password Updated",
             });
         } catch (error) {
-            userLogger.error('API: Set New Password')
-            userLogger.error(`Server Error: ${error.message}`)
+            usersLogger.error('API: Set New Password')
+            usersLogger.error(`Server Error: ${error.message}`)
             res.status(500).send({
                 success: false,
                 message: 'Server Error',

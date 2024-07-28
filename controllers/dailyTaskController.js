@@ -41,7 +41,6 @@ module.exports = {
             const taskData = await dailyTaskModel.findByIdAndUpdate(taskId, { //* Find task data by id and update.
                 taskTitle: req.body.taskTitle || undefined,
                 taskDescription: req.body.taskDescription || undefined,
-                isCompleted: req.body.isCompleted || undefined,
                 taskReminder: req.body.taskReminder || undefined,
             }, {
                 new: true,

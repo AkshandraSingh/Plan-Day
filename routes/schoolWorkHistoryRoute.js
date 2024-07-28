@@ -5,5 +5,6 @@ const schoolWorkHistoryController = require('../controllers/schoolWorkHistoryCon
 const schoolWorkHistoryRouter = express.Router()
 
 schoolWorkHistoryRouter.post('/addSchoolWorkHistory/:userId', schoolWorkHistoryController.addSchoolWorkHistory)
+schoolWorkHistoryRouter.patch('/updateSchoolWorkHistory/:workId', schoolWorkHistoryController.updateSchoolWorkHistory)
 
 module.exports = schoolWorkHistoryRouter
