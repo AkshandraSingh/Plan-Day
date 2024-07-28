@@ -4,3 +4,10 @@ level error: Jul-16-2024 17:07:36 	Task not found (API: View Task)
 level info: Jul-16-2024 17:07:57 	Tasks fetched successfully (API: View All Tasks)
 level info: Jul-16-2024 17:08:04 	Task fetched successfully (API: View Task)
 level info: Jul-28-2024 00:51:22 	Task added successfully (API: Create Task)
+level info: Jul-29-2024 01:22:49 	Task added successfully (API: Create Task)
+level error: Jul-29-2024 01:22:59 	No tasks found for today (API: View Today Tasks Only)
+level error: Jul-29-2024 01:23:28 	No tasks found for today (API: View Today Tasks Only)
+level error: Jul-29-2024 01:26:33 	API: View Today Tasks Only
+level error: Jul-29-2024 01:26:33 	Error: Cannot access 'startOfDay' before initialization
+level info: Jul-29-2024 01:26:55 	Today's tasks fetched successfully (API: View Today Tasks Only)
+level info: Jul-29-2024 01:27:25 	Today's tasks fetched successfully (API: View Today Tasks Only)

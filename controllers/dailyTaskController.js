@@ -140,4 +140,43 @@ module.exports = {
             })
         }
     },
+
+    //? View Today Tasks Only
+    todayTask: async (req, res) => {
+        try {
+            const { userId } = req.params;
+            const startOfDay = new Date();
+            const endOfDay = new Date();
+            startOfDay.setHours(0, 0, 0, 0);
+            endOfDay.setHours(23, 59, 59, 999);
+            const todayTasksData = await dailyTaskModel.find({
+                userId: userId,
+                createdAt: {
+                    $gte: startOfDay,
+                    $lte: endOfDay,
+                }
+            }).select('taskTitle taskDescription'); //* Find all tasks related to userId and today's date and filter the response.
+            if (todayTasksData.length === 0) {
+                dailyTaskLogger.error("No tasks found for today (API: View Today Tasks Only)");
+                return res.status(404).send({
+                    success: false,
+                    message: 'No tasks found for today',
+                });
+            }
+            dailyTaskLogger.info("Today's tasks fetched successfully (API: View Today Tasks Only)");
+            res.status(200).send({
+                success: true,
+                message: "Today's tasks fetched successfully",
+                todayTasksData: todayTasksData,
+            });
+        } catch (error) {
+            dailyTaskLogger.error("API: View Today Tasks Only");
+            dailyTaskLogger.error(`Error: ${error.message}`);
+            res.status(500).send({
+                success: false,
+                message: 'Server Error',
+                error: error.message,
+            });
+        }
+    },
 }
