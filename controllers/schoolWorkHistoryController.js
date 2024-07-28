@@ -25,7 +25,7 @@ module.exports = {
     updateSchoolWorkHistory: async (req, res) => {
         try {
             const { workId } = req.params
-            const updatedWorkData = await schoolWorkHistoryModel.findByIdAndUpdate(workId, { //* Find task data by id and update.
+            const updatedWorkData = await schoolWorkHistoryModel.findByIdAndUpdate(workId, {
                 subjectName: req.body.subjectName || undefined,
                 workName: req.body.workName || undefined,
                 workDescription: req.body.workDescription || undefined,
@@ -36,6 +36,25 @@ module.exports = {
                 success: true,
                 message: "Work updated successfully!",
                 updatedWorkData: updatedWorkData
+            })
+        } catch (error) {
+            res.status(500).send({
+                success: false,
+                message: "Error!",
+                error: error.message
+            })
+        }
+    },
+
+    //? Delete Work History API
+    deleteSchoolWorkHistory: async (req, res) => {
+        try {
+            const { workId } = req.params
+            const deletedWorkData = await schoolWorkHistoryModel.findByIdAndDelete(workId)
+            res.status(200).send({
+                success: true,
+                message: "Work deleted successfully!",
+                deletedWorkData: deletedWorkData
             })
         } catch (error) {
             res.status(500).send({
