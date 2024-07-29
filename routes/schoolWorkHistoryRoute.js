@@ -11,5 +11,6 @@ schoolWorkHistoryRouter.get('/viewFullSchoolWorkHistory/:userId', schoolWorkHist
 schoolWorkHistoryRouter.get('/viewSchoolWork/:workId', schoolWorkHistoryController.viewSchoolWork)
 schoolWorkHistoryRouter.get('/searchSchoolWorkBySubjectName/:userId/:subjectName', schoolWorkHistoryController.searchSchoolWorkBySubjectName)
 schoolWorkHistoryRouter.get('/searchSchoolWorkByWorkName/:userId/:workName', schoolWorkHistoryController.searchSchoolWorkByWorkName)
+schoolWorkHistoryRouter.post('/searchWorkByDate/:userId', schoolWorkHistoryController.searchWorkByDate)
 
 module.exports = schoolWorkHistoryRouter

@@ -164,4 +164,36 @@ module.exports = {
             })
         }
     },
+
+    //? Search Work By Date API
+    searchWorkByDate: async (req, res) => {
+        try {
+            const { userId } = req.params
+            const { startDate, endDate } = req.body
+            const searchWorkData = await schoolWorkHistoryModel.find({ //* Format YYYY-MM-DD
+                userId: userId,
+                createdAt: {
+                    $gte: new Date(startDate),
+                    $lte: new Date(endDate)
+                }
+            }).select("subjectName workName")
+            if (searchWorkData.length <= 0) {
+                return res.status(404).send({
+                    success: false,
+                    message: 'No school work history found for this date range',
+                })
+            }
+            res.status(200).send({
+                success: true,
+                message: "School work history retrieved successfully!",
+                searchWorkData: searchWorkData,
+            })
+        } catch (error) {
+            res.status(500).send({
+                success: false,
+                message: "Error!",
+                error: error.message
+            })
+        }
+    },
 }
