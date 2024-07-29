@@ -32,3 +32,11 @@ level info: Jul-29-2024 01:53:43 	Tasks fetched successfully for the given dates
 level info: Jul-29-2024 02:02:47 	Tasks fetched successfully for the given letter (API: Search Tasks by Letter)
 level error: Jul-29-2024 02:02:59 	No tasks found for the given letter (API: Search Tasks by Letter)
 level info: Jul-29-2024 02:03:03 	Tasks fetched successfully for the given letter (API: Search Tasks by Letter)
+level info: Jul-29-2024 02:05:05 	Task added successfully (API: Create Task)
+level info: Jul-29-2024 02:08:17 	Task added successfully (API: Create Task)
+level error: Jul-29-2024 02:10:47 	API: Create Task
+level error: Jul-29-2024 02:10:47 	Error: moment is not defined
+level info: Jul-29-2024 02:11:04 	Task added successfully (API: Create Task)
+level info: Jul-29-2024 02:12:51 	Task added successfully (API: Create Task)
+level info: Jul-29-2024 02:14:00 	Task added successfully (API: Create Task)
+level info: Jul-29-2024 02:16:15 	Task added successfully (API: Create Task)

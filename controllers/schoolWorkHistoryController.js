@@ -64,4 +64,29 @@ module.exports = {
             })
         }
     },
+
+    //? View Full School Work History API
+    viewFullSchoolWorkHistory: async (req, res) => {
+        try {
+            const { userId } = req.params
+            const fullWorkHistoryData = await schoolWorkHistoryModel.find({ userId: userId }).select("subjectName workName")
+            if (fullWorkHistoryData.length <= 0) {
+                return res.status(404).send({
+                    success: false,
+                    message: 'No school work history found for this user',
+                })
+            }
+            res.status(200).send({
+                success: true,
+                message: "School work history retrieved successfully!",
+                fullWorkHistoryData: fullWorkHistoryData
+            })
+        } catch (error) {
+            res.status(500).send({
+                success: false,
+                message: "Error!",
+                error: error.message
+            })
+        }
+    },
 }
