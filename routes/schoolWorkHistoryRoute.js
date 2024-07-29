@@ -10,5 +10,6 @@ schoolWorkHistoryRouter.delete('/deleteSchoolWorkHistory/:workId', schoolWorkHis
 schoolWorkHistoryRouter.get('/viewFullSchoolWorkHistory/:userId', schoolWorkHistoryController.viewFullSchoolWorkHistory)
 schoolWorkHistoryRouter.get('/viewSchoolWork/:workId', schoolWorkHistoryController.viewSchoolWork)
 schoolWorkHistoryRouter.get('/searchSchoolWorkBySubjectName/:userId/:subjectName', schoolWorkHistoryController.searchSchoolWorkBySubjectName)
+schoolWorkHistoryRouter.get('/searchSchoolWorkByWorkName/:userId/:workName', schoolWorkHistoryController.searchSchoolWorkByWorkName)
 
 module.exports = schoolWorkHistoryRouter
