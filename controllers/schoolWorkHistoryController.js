@@ -108,4 +108,32 @@ module.exports = {
             })
         }
     },
+
+    //? Search Work By Subject Name API
+    searchSchoolWorkBySubjectName: async (req, res) => {
+        try {
+            const { userId, subjectName } = req.params
+            const searchWorkData = await schoolWorkHistoryModel.find({
+                userId: userId,
+                subjectName: new RegExp(subjectName, 'i')
+            }).select("subjectName workName")
+            if (searchWorkData.length <= 0) {
+                return res.status(404).send({
+                    success: false,
+                    message: 'No school work history found for this subject',
+                })
+            }
+            res.status(200).send({
+                success: true,
+                message: "School work history retrieved successfully!",
+                searchWorkData: searchWorkData,
+            })
+        } catch (error) {
+            res.status(500).send({
+                success: false,
+                message: "Error!",
+                error: error.message
+            })
+        }
+    },
 }
