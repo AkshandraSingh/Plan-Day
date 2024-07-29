@@ -89,4 +89,23 @@ module.exports = {
             })
         }
     },
+
+    //? View Specific School Work History API
+    viewSchoolWork: async (req, res) => {
+        try {
+            const { workId } = req.params
+            const workData = await schoolWorkHistoryModel.findById(workId)
+            res.status(200).send({
+                success: true,
+                message: "School work retrieved successfully!",
+                workData: workData,
+            })
+        } catch (error) {
+            res.status(500).send({
+                success: false,
+                message: "Error!",
+                error: error.message
+            })
+        }
+    },
 }
