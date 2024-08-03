@@ -39,7 +39,26 @@ const updateGrade = async (req, res) => {
     }
 }
 
+//? Delete Grade API
+const deleteGrade = async (req, res) => {
+    try {
+        const { gradeId } = req.params
+        await subjectGradeModel.findByIdAndDelete(gradeId)
+        res.status(200).send({
+            success: true,
+            message: "Grade deleted successfully",
+        })
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "Error!",
+            error: error.message
+        })
+    }
+}
+
 module.exports = {
     addGrade,
     updateGrade,
+    deleteGrade,
 }
