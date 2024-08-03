@@ -8,5 +8,6 @@ const subjectGradeRouter = express.Router()
 subjectGradeRouter.post('/addGrade/:userId', subjectGradeController.addGrade)
 subjectGradeRouter.patch('/updateGrade/:gradeId', subjectGradeController.updateGrade)
 subjectGradeRouter.delete('/deleteGrade/:gradeId', subjectGradeController.deleteGrade)
+subjectGradeRouter.get('/viewExamNames/:userId', subjectGradeController.viewExamNames)
 
 module.exports = subjectGradeRouter
