@@ -9,9 +9,17 @@ const subjectGradeModel = new mongoose.Schema({
         type: Number,
         required: true
     },
+    maxMarks: {
+        type: Number,
+        required: true
+    },
     examName: {
         type: String,
         required: true
+    },
+    percentage: {
+        type: Number,
+        default: 0,
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,

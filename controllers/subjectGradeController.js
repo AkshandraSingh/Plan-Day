@@ -5,7 +5,9 @@ const addGrade = async (req, res) => {
     try {
         const { userId } = req.params
         const userGrade = new subjectGradeModel(req.body)
+        const calculatePercentage = userGrade.subjectGrade / userGrade.maxMarks * 100
         userGrade.userId = userId
+        userGrade.percentage = calculatePercentage
         await userGrade.save()
         res.status(201).send({
             success: true,
@@ -81,9 +83,99 @@ const viewExamNames = async (req, res) => {
     }
 }
 
+//? Search By Exam Name API
+const searchByExamName = async (req, res) => {
+    try {
+        const { userId, examName } = req.params
+        const searchGradeData = await subjectGradeModel.find({
+            userId: userId,
+            examName: new RegExp(examName, 'i'),
+        }).select("subjectName subjectGrade examName percentage")
+        if (searchGradeData.length <= 0) {
+            return res.status(404).send({
+                success: false,
+                message: 'No grade found for this exam name',
+            })
+        }
+        res.status(200).send({
+            success: true,
+            message: "Grade fetched successfully",
+            searchGradeData: searchGradeData,
+        })
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "Error!",
+            error: error.message
+        })
+    }
+}
+
+//? Search By Subject Name
+const searchBySubjectName = async (req, res) => {
+    try {
+        const { userId, subjectName } = req.params
+        const searchGradeData = await subjectGradeModel.find({
+            userId: userId,
+            subjectName: new RegExp(subjectName, 'i'),
+        }).select("subjectName subjectGrade examName percentage")
+        if (searchGradeData.length <= 0) {
+            return res.status(404).send({
+                success: false,
+                message: 'No grade found for this subject name',
+            })
+        }
+        res.status(200).send({
+            success: true,
+            message: "Grade fetched successfully",
+            searchGradeData: searchGradeData,
+        })
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "Error!",
+            error: error.message
+        })
+    }
+}
+
+//? View Grade API
+const viewGrade = async (req, res) => {
+    try {
+        const { userId } = req.params
+        const { examName, subjectName } = req.body
+        const viewGradeData = await subjectGradeModel.findOne({
+            userId: userId,
+            examName: examName,
+            subjectName: subjectName,
+        })
+        if (!viewGradeData) {
+            return res.status(404).send({
+                success: false,
+                message: 'No grade found for this subject name and exam name',
+            })
+        }
+        res.status(200).send({
+            success: true,
+            message: "Grade fetched successfully",
+            viewGradeData: viewGradeData,
+        })
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "Error!",
+            error: error.message
+        })
+    }
+}
+
+
 module.exports = {
     addGrade,
     updateGrade,
     deleteGrade,
     viewExamNames,
+    searchByExamName,
+    searchBySubjectName,
+    viewGrade,
 }
