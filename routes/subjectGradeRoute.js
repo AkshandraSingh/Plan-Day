@@ -1,11 +1,12 @@
 const express = require('express')
 
 const subjectGradeController = require('../controllers/subjectGradeController')
+const subjectGradeValidator = require('../validations/subjectGradeValidations/subjectGradeValidator')
 
 const subjectGradeRouter = express.Router()
 
 //* Subject Grade Routes (Ending Points)
-subjectGradeRouter.post('/addGrade/:userId', subjectGradeController.addGrade)
+subjectGradeRouter.post('/addGrade/:userId', subjectGradeValidator.addGradeValidation, subjectGradeController.addGrade)
 subjectGradeRouter.patch('/updateGrade/:gradeId', subjectGradeController.updateGrade)
 subjectGradeRouter.delete('/deleteGrade/:gradeId', subjectGradeController.deleteGrade)
 subjectGradeRouter.get('/viewExamNames/:userId', subjectGradeController.viewExamNames)
