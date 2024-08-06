@@ -1,10 +1,11 @@
 const express = require('express')
 
 const schoolWorkHistoryController = require('../controllers/schoolWorkHistoryController')
+const schoolWorkHistoryValidator = require('../validations/schoolWorkValidations/schoolWorkHistoryValidator')
 
 const schoolWorkHistoryRouter = express.Router()
 
-schoolWorkHistoryRouter.post('/addSchoolWorkHistory/:userId', schoolWorkHistoryController.addSchoolWorkHistory)
+schoolWorkHistoryRouter.post('/addSchoolWorkHistory/:userId', schoolWorkHistoryValidator.addSchoolWorkHistoryValidation, schoolWorkHistoryController.addSchoolWorkHistory)
 schoolWorkHistoryRouter.patch('/updateSchoolWorkHistory/:workId', schoolWorkHistoryController.updateSchoolWorkHistory)
 schoolWorkHistoryRouter.delete('/deleteSchoolWorkHistory/:workId', schoolWorkHistoryController.deleteSchoolWorkHistory)
 schoolWorkHistoryRouter.get('/viewFullSchoolWorkHistory/:userId', schoolWorkHistoryController.viewFullSchoolWorkHistory)
